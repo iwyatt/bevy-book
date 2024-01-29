@@ -2,9 +2,7 @@ use bevy::prelude::*;
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
-        .add_systems(Startup, add_people)
-        .add_systems(Update, (hello_world, (update_people, greet_people).chain()))
+        .add_plugins((DefaultPlugins, HelloPlugin))
         .run();
 }
 
@@ -36,5 +34,14 @@ fn update_people(mut query: Query<&mut Name, With<Person>>) {
             name.0 = "Elaina Hume".to_string();
             break; // We don’t need to change any other names
         }
+    }
+}
+
+pub struct HelloPlugin;
+
+impl Plugin for HelloPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Startup, add_people)
+        .add_systems(Update, (hello_world, greet_people));
     }
 }
